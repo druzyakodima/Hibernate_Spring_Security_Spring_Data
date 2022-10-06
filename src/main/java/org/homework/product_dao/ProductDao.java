@@ -18,47 +18,73 @@ public class ProductDao {
 
 
     public Product findOneById(Long id) {
+
         EntityManager em = EMFactory.createEntityManager();
         em.getTransaction().begin();
-        Product product = em.find(Product.class, id);
 
+        Product product = em.find(Product.class, id);
         em.getTransaction().commit();
 
         em.close();
+        if (product == null) {
+            System.out.println("Нет такого продукта!");
+        }
+
         return product;
     }
 
 
     public List<Product> findAll() {
+
         EntityManager em = EMFactory.createEntityManager();
         em.getTransaction().begin();
+
         List<Product> from_products = em.createQuery("from Product ", Product.class).getResultList();
+
         em.getTransaction().commit();
         em.close();
+
         return from_products;
     }
 
     public void deleteById(Long id) {
+
         EntityManager em = EMFactory.createEntityManager();
         em.getTransaction().begin();
-        em.remove(em.find(Product.class, id));
+
+        if (em.find(Product.class, id) != null) {
+            em.remove(em.find(Product.class, id));
+        } else {
+            System.out.println("Нет такого продкукта!");
+        }
+
         em.getTransaction().commit();
         em.close();
 
     }
 
     public Product saveOrUpdate(Product product) {
+
         EntityManager em = EMFactory.createEntityManager();
         em.getTransaction().begin();
+
         List<Product> productList = em.createQuery("from Product ", Product.class).getResultList();
-        if (productList.contains(product)) {
-            product.setTitle(product.getTitle());
-            product.setPrice(product.getPrice());
+
+        if (productList.toString().matches("(.*)" + product.getTitle() + "(.*)")) {
+
+            Product product_change = em.find(Product.class,product.getId());
+
+            product_change.setTitle(product.getTitle());
+            product_change.setPrice(product.getPrice());
+            product_change.setProduct_id(product.getProduct_id());
+
         } else {
             em.merge(product);
         }
+
         em.getTransaction().commit();
         em.close();
+
         return product;
     }
 

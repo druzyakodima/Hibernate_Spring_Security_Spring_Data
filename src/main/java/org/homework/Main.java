@@ -14,76 +14,28 @@ public class Main {
 
         ProductDao productDao = new ProductDao(emFactory);
 
-        /*Product product_a = new Product("Product A", 12234);
-        Product product_b = new Product( "Product B", 233);
-        Product product_c = new Product( "Product C", 125);
-        Product product_d = new Product( "Product D", 1251);
+        /*Product product_w = new Product(19L,123L, "Product W", 12234);
+        Product product_z = new Product(20L,1234l, "Product Z", 233);
+        Product product_x = new Product(21L,12345L, "Product X", 125);
+        Product product_y = new Product(22L,123456L, "Product Y", 1251);
 
-        productDao.saveOrUpdate(product_b);
-        productDao.saveOrUpdate(product_c);
-        productDao.saveOrUpdate(product_a);
-        productDao.saveOrUpdate(product_d);*/
+        productDao.saveOrUpdate(product_w);
+        productDao.saveOrUpdate(product_z);
+        productDao.saveOrUpdate(product_x);
+        productDao.saveOrUpdate(product_y);*/
 
-        /*productDao.deleteById(4L);
-        productDao.deleteById(5L);
-        productDao.deleteById(6L);*/
+        /*Product product_y = new Product(22L,123456L, "Product Y", 3362);
+        productDao.saveOrUpdate(product_y);*/
+
+        /*productDao.deleteById(15L);
+        productDao.deleteById(16L);
+        productDao.deleteById(17L);
+        productDao.deleteById(18L);*/
 
 
-        System.out.println(productDao.findOneById(5L));
+        System.out.println(productDao.findOneById(10L));
 
         System.out.println(productDao.findAll());
 
-        // EntityManager em = emFactory.createEntityManager();
-
-
-        // INSERT
-       /*em.getTransaction().begin();
-
-        Product product_a = new Product(1L, "Product A", 234);
-        Product product_b = new Product(2L, "Product B", 233);
-        Product product_c = new Product(3L, "Product C", 125);
-
-        em.merge(product_c);
-
-        em.getTransaction().commit();
-
-        em.close();*/
-
-        // SELECT
-        /*System.out.println("Product with id 2");
-        Product product = em.find(Product.class, 2L);
-        System.out.println(product);
-
-        System.out.println("All products");
-        List<Product> from_product = em.createQuery("from Product", Product.class)
-                .getResultList();
-        System.out.println(from_product);
-
-        System.out.println("Product with title Product A");
-        Object product_any = em.createQuery("from Product pr where pr.title = :title")
-                .setParameter("title", "Product A")
-                .getSingleResult();
-        System.out.println(product_any);*/
-
-
-        //UPDATE
-        /*Product product = em.find(Product.class, 3L);
-
-        em.getTransaction().begin();
-
-        product.setPrice(1234);
-
-        em.getTransaction().commit();
-
-        em.close();*/
-
-        //DELETE
-        /*em.getTransaction().begin();
-
-        em.remove(em.find(Product.class, 2L));
-
-        em.getTransaction().commit();
-
-        em.close();*/
     }
 }
