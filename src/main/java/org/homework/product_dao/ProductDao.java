@@ -12,7 +12,6 @@ import java.util.List;
 public class ProductDao {
     private final EntityManagerFactory EMFactory;
 
-
     public ProductDao(EntityManagerFactory EMFactory) {
         this.EMFactory = EMFactory;
     }

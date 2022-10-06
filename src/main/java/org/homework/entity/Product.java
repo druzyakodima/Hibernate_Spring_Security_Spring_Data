@@ -16,15 +16,15 @@ public class Product {
 
     /*@Column(length = 128,unique = true,nullable = false)
     private Long product_id;*/
-    @Column(length = 128,unique = true,nullable = false)
+    @Column(length = 128, unique = true, nullable = false)
     private String title;
 
-    @Column(length = 128,unique = true,nullable = false)
+    @Column(length = 128, unique = true, nullable = false)
     private int price;
 
 
     /*public Product(*//*Long product_id,*//* String title, int price) {
-        *//*this.product_id = product_id;*//*
+     *//*this.product_id = product_id;*//*
         this.title = title;
         this.price = price;
     }

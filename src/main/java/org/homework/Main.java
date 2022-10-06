@@ -12,7 +12,7 @@ public class Main {
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
 
-        ProductDao productDao =  new ProductDao(emFactory);
+        ProductDao productDao = new ProductDao(emFactory);
 
         /*Product product_a = new Product("Product A", 12234);
         Product product_b = new Product( "Product B", 233);
@@ -33,10 +33,10 @@ public class Main {
 
         System.out.println(productDao.findAll());
 
-      // EntityManager em = emFactory.createEntityManager();
+        // EntityManager em = emFactory.createEntityManager();
 
 
-       // INSERT
+        // INSERT
        /*em.getTransaction().begin();
 
         Product product_a = new Product(1L, "Product A", 234);
