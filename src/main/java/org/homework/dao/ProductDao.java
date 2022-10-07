@@ -38,6 +38,7 @@ public class ProductDao {
     }
 
     public void update(Product product) {
+
         if (product != null) {
             execute.executeInTransaction(em -> em.merge(product));
         } else {
@@ -46,6 +47,7 @@ public class ProductDao {
     }
 
     public void insert(Product product) {
+
         if (product != null) {
             execute.executeInTransaction(em -> em.persist(product));
         } else {

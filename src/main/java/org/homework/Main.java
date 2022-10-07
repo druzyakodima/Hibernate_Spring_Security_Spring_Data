@@ -18,12 +18,10 @@ public class Main {
 
         System.out.println(productDao.findOneById(29L));
 
-        Product product_f = new Product(29L,21L, "Product F", 11);
+        Product product_f = new Product(29L, 21L, "Product F", 11);
         productDao.update(product_f);
 
         System.out.println(productDao.findOneById(29L));
-
-
 
         System.out.println(productDao.findAll());
 

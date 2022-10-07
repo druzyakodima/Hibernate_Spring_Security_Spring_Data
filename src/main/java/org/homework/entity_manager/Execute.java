@@ -14,6 +14,7 @@ public class Execute {
     }
 
     public <R> R executeEntityManager(Function<EntityManager, R> function) {
+
         EntityManager em = EMFactory.createEntityManager();
         try {
             return function.apply(em);
@@ -25,6 +26,7 @@ public class Execute {
     }
 
     public void executeInTransaction(Consumer<EntityManager> consumer) {
+
         EntityManager em = EMFactory.createEntityManager();
         try {
             em.getTransaction().begin();
