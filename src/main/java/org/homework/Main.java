@@ -27,8 +27,10 @@ public class Main {
         /*Product product_y = new Product(123456L, "Product Y", 3362);
         productDao.saveOrUpdate(product_y);*/
 
-        Product product_h = new Product(1234567L, "Product H", 5362);
-        productDao.saveOrUpdate(product_h);
+
+        //productDao.saveOrUpdate(product_h);
+        /*Product product_h = new Product(23L,123213L, "Product H", 53621);
+        productDao.saveOrUpdate(product_h);*/
         /*productDao.deleteById(15L);
         productDao.deleteById(16L);
         productDao.deleteById(17L);

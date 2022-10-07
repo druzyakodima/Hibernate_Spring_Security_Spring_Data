@@ -68,19 +68,7 @@ public class ProductDao {
         EntityManager em = EMFactory.createEntityManager();
         em.getTransaction().begin();
 
-        List<Product> productList = em.createQuery("from Product ", Product.class).getResultList();
-
-        if (productList.toString().matches("(.*)" + product.getTitle() + "(.*)")) {
-
-            Product product_change = em.find(Product.class,product.getId());
-
-            product_change.setTitle(product.getTitle());
-            product_change.setPrice(product.getPrice());
-            product_change.setProduct_id(product.getProduct_id());
-
-        } else {
-            em.persist(product);
-        }
+        em.merge(product);
 
         em.getTransaction().commit();
         em.close();
