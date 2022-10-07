@@ -30,6 +30,12 @@ public class Product {
         this.price = price;
     }
 
+    public Product(Long product_id, String title, int price) {
+        this.product_id = product_id;
+        this.title = title;
+        this.price = price;
+    }
+
     public Product() {
     }
 

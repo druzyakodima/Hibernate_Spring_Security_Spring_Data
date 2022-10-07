@@ -79,7 +79,7 @@ public class ProductDao {
             product_change.setProduct_id(product.getProduct_id());
 
         } else {
-            em.merge(product);
+            em.persist(product);
         }
 
         em.getTransaction().commit();
