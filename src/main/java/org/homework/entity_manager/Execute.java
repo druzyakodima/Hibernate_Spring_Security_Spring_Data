@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Execute {
+
     private final EntityManagerFactory EMFactory;
 
     public Execute(EntityManagerFactory emFactory) {

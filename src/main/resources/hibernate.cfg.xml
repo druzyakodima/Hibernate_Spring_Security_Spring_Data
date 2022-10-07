@@ -20,5 +20,6 @@
         <mapping class="org.homework.entity.Product"/>
 
     </session-factory>
+
 </hibernate-configuration>
 

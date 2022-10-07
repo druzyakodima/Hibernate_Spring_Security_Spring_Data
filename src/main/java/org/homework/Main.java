@@ -22,7 +22,6 @@ public class Main {
         productDao.update(product_f);
 
         System.out.println(productDao.findOneById(29L));
-
         System.out.println(productDao.findAll());
 
     }

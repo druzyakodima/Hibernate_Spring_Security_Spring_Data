@@ -13,7 +13,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(length = 128, unique = true, nullable = false)
     private Long product_id;
     @Column(length = 128, unique = true, nullable = false)
