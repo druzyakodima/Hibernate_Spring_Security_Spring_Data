@@ -14,12 +14,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 128,unique = true,nullable = false)
+    @Column(length = 128, unique = true, nullable = false)
     private Long product_id;
     @Column(length = 128, unique = true, nullable = false)
     private String title;
 
-    @Column(length = 128, unique = true, nullable = false)
+    @Column(length = 128, nullable = false)
     private int price;
 
 
