@@ -18,6 +18,7 @@
         <property name="hibernate.format_sql">true</property>
 
         <mapping class="org.homework.entity.Product"/>
+        <mapping class="org.homework.entity.Buyer"/>
 
     </session-factory>
 

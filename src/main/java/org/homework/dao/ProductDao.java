@@ -1,6 +1,7 @@
 package org.homework.dao;
 
 import lombok.Getter;
+import org.homework.entity.Buyer;
 import org.homework.entity.Product;
 import org.homework.entity_manager.Execute;
 
@@ -29,9 +30,11 @@ public class ProductDao {
 
         execute.executeInTransaction(em -> {
             Product product = em.find(Product.class, id);
-            if (product != null) em.remove(product);
+            if (product != null) {
+                em.remove(product);
+            }
             else {
-                System.out.println("Нет такого продкукта!");
+                System.out.println("Нет такого продукта!");
             }
         });
     }
@@ -46,11 +49,16 @@ public class ProductDao {
     }
 
     public void insert(Product product) {
-
         if (product != null) {
-            execute.executeInTransaction(em -> em.persist(product));
+            Product new_product = product;
+            execute.executeInTransaction(em -> em.persist(new_product));
         } else {
             System.out.println("Не удалось добавить продукт");
         }
+    }
+
+    public void findBuyerByIdProduct(Long id) {
+        Product product = execute.executeEntityManager(em -> em.find(Product.class, id));
+        product.getBuyer().forEach(System.out::println);
     }
 }

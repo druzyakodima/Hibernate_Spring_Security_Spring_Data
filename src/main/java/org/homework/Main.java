@@ -2,8 +2,8 @@ package org.homework;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.Configuration;
+import org.homework.dao.BuyersDao;
 import org.homework.dao.ProductDao;
-import org.homework.entity.Product;
 import org.homework.entity_manager.Execute;
 
 public class Main {
@@ -14,15 +14,16 @@ public class Main {
                 .buildSessionFactory();
 
         Execute execute = new Execute(emFactory);
+
+        BuyersDao buyersDao = new BuyersDao(execute);
         ProductDao productDao = new ProductDao(execute);
 
-        System.out.println(productDao.findOneById(29L));
 
-        Product product_f = new Product(29L, 21L, "Product F", 11);
-        productDao.update(product_f);
 
-        System.out.println(productDao.findOneById(29L));
-        System.out.println(productDao.findAll());
-
+        // По id покупателя узнать список купленных им товаров
+        buyersDao.getProductByIdBuyers(1L);
+        System.out.println("-------------------------");
+        // По id товара узнавать список покупателей этого товара
+        productDao.findBuyerByIdProduct(9L);
     }
 }
