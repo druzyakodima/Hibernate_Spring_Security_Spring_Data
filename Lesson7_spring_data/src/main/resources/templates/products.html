@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row py-2">
+        <div class="col-12 mx-4 mt-2">
+            <a class="btn btn-primary mx-3" style="float: right;" th:href="@{/product/showFormAddProduct}">Add</a>
+        </div>
+
+        <div class="col-12 mt-2">
+            <form class="form-inline mx-0" th:action="@{/product/showProductById}" th:method="get"
+                  th:object="${productRepr}">
+                <div class="form-group">
+                    <input type="number" th:field="*{id}" class="form-control mx-4" id="productID" name="productID"
+                           placeholder="ID">
+                </div>
+                <form class="btn btn-primary" th:method="get">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </form>
+            </form>
+        </div>
+
+        <div class="col-12 mt-2">
+            <form class="form-inline" th:action="@{/product/remove}" th:method="delete" th:object="${productRepr}">
+                <div class="form-group mx-4">
+                    <input type="number" th:field="*{id}" class="form-control" id="ID" name="ID"
+                           placeholder="ID">
+                </div>
+                <form class="d-inline" th:method="delete"
+                      th:action="@{/product/remove}">
+                    <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                </form>
+            </form>
+        </div>
+
+        <div class="col-12">
+            <table class="table table-bordered my-2">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Product ID</th>
+                    <th scope="col">Product name</th>
+                    <th scope="col">Cost($)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <th th:text="${product.getId()}"></th>
+                    <th th:text="${product.getProduct_id()}"></th>
+                    <td th:text="${product.getTitle()}"></td>
+                    <td th:text="${product.getPrice()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
