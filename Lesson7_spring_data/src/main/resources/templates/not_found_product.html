@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/heads :: heads"></head>
+<h1>NOT FOUND PRODUCT</h1>
+<body>
+<form th:action="@{/product}" th:method="get">
+    <button type="submit" class="btn btn-primary mx-5">To the main page</button>
+</form>
+
+<th:block th:replace="fragments/flooter.html :: scripts"/>
+</body>
+</html>

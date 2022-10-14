@@ -1,7 +1,6 @@
 package com.example.lesson7_spring_data.entity;
 
 
-import com.example.lesson7_spring_data.service.ProductRepr;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,14 +18,14 @@ public class Product {
     private Long id;
 
     @Column(length = 128, unique = true, nullable = false)
-    private int product_id;
+    private Integer product_id;
 
     @Column(length = 128, unique = true, nullable = false)
     private String title;
 
 
     @Column(length = 128, nullable = false)
-    private int price;
+    private Integer price;
 
     public Product(ProductRepr productRepr) {
         this.id = productRepr.getId();

@@ -1,4 +1,4 @@
-package com.example.lesson7_spring_data.service;
+package com.example.lesson7_spring_data.entity;
 
 import com.example.lesson7_spring_data.entity.Product;
 import lombok.Getter;
