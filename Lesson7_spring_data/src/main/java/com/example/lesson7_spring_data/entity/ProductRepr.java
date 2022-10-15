@@ -1,6 +1,5 @@
 package com.example.lesson7_spring_data.entity;
 
-import com.example.lesson7_spring_data.entity.Product;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;

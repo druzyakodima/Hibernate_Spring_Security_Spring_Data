@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -40,7 +39,7 @@ public class ProductController {
                            @RequestParam("priceMinFilter") Optional<Integer> priceMinFilter,
                            @RequestParam("priceMaxFilter") Optional<Integer> priceMaxFilter,
                            @RequestParam("currentPage") Optional<Integer> currentPage,
-                           @RequestParam("countPage") Optional<Integer> countPage) {
+                           @RequestParam("countElementOnPage") Optional<Integer> countElementOnPage) {
 
         logger.info("List page requested");
 
@@ -48,7 +47,7 @@ public class ProductController {
                 (priceMinFilter.orElse(null),
                         priceMaxFilter.orElse(null),
                         currentPage.orElse(1) - 1,
-                        countPage.orElse(10));
+                        countElementOnPage.orElse(10));
 
         model.addAttribute("productsRepr", productsRepr);
 

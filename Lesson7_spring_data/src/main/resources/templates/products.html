@@ -103,7 +103,7 @@
                         th:classappend="${num == productsRepr.number + 1} ? 'active'"
                         class="page-item">
                         <a th:text="${num}" class="page-link" th:href="@{/product(currentPage=${num},
-                         countPage=${productsRepr.size},
+                         countElementOnPage=${productsRepr.size},
                           priceMinFilter=${param.priceMinFilter},
                           priceMaxFilter=${param.priceMaxFilter})}">1 <span th:if="${num == productsRepr.number + 1}"
                                                                             class="sr-only">(current)</span></a>

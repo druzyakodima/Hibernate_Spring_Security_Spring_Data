@@ -6,6 +6,8 @@ import org.homework.dao.BuyersDao;
 import org.homework.dao.ProductDao;
 import org.homework.entity_manager.Execute;
 
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -17,7 +19,6 @@ public class Main {
 
         BuyersDao buyersDao = new BuyersDao(execute);
         ProductDao productDao = new ProductDao(execute);
-
 
 
         // По id покупателя узнать список купленных им товаров

@@ -34,6 +34,7 @@ public class ProductService implements IProductService {
     public void save(ProductRepr productRepr) {
         Product product = new Product(productRepr);
         productRepository.save(product);
+        if (productRepr.getId() == null) productRepr.setId(product.getId());
     }
 
 
