@@ -4,12 +4,19 @@ import com.example.lesson7_spring_data.entity.ProductRepr;
 import com.example.lesson7_spring_data.exception.BadRequestException;
 import com.example.lesson7_spring_data.exception.NotFoundException;
 import com.example.lesson7_spring_data.service.ProductService;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+//swagger:
+//http://localhost:8080/swagger-ui/index.html#/
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -17,9 +24,29 @@ public class ProductResource {
 
     private final ProductService productService;
 
+
     @Autowired
     public ProductResource(ProductService productService) {
         this.productService = productService;
+    }
+
+    @GetMapping("/filter")
+    public Page<ProductRepr> listPage(Model model,
+                                      @ModelAttribute("productRepr") ProductRepr productRepr,
+                                      @RequestParam("priceMinFilter") Optional<Integer> priceMinFilter,
+                                      @RequestParam("priceMaxFilter") Optional<Integer> priceMaxFilter,
+                                      @Parameter(example = "1") @RequestParam("currentPage") Optional<Integer> currentPage,
+                                      @RequestParam("countElementOnPage") Optional<Integer> countElementOnPage) {
+
+        Page<ProductRepr> productsRepr = productService.findWithFilter
+                (priceMinFilter.orElse(null),
+                        priceMaxFilter.orElse(null),
+                        currentPage.orElse(1) - 1,
+                        countElementOnPage.orElse(10));
+
+        model.addAttribute("productsRepr", productsRepr);
+
+        return productsRepr;
     }
 
     @GetMapping(value = "/all", produces = "application/json")
@@ -29,7 +56,7 @@ public class ProductResource {
 
     @GetMapping("/findById/{id}")
     public ProductRepr findById(@PathVariable("id") Long id) {
-        return productService.findById(id).orElseThrow(NotFoundException :: new);
+        return productService.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(value = "/create", consumes = "application/json")

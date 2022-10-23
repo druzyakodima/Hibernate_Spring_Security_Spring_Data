@@ -2,6 +2,7 @@ package com.example.lesson7_spring_data.controllers;
 
 import com.example.lesson7_spring_data.entity.Product;
 import com.example.lesson7_spring_data.exception.NotFoundException;
+import com.example.lesson7_spring_data.service.CartServer;
 import com.example.lesson7_spring_data.service.IProductService;
 import com.example.lesson7_spring_data.entity.ProductRepr;
 import com.example.lesson7_spring_data.service.ProductService;
@@ -15,18 +16,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
 
-    public ProductController() {
-    }
-
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     private IProductService productService;
+
+    private CartServer cartServer;
+
+    public ProductController() {
+    }
+
+    @Autowired
+    public void setCartServer(CartServer cartServer) {
+        this.cartServer = cartServer;
+    }
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -78,6 +87,20 @@ public class ProductController {
         return "redirect:/product";
     }
 
+    @RequestMapping(path = "/showProductById")
+    public String showProductById(Model model, @RequestParam("id") Long id) {
+
+        productService.findById(id).orElseThrow(NotFoundException::new);
+
+        return "product-form-result-find-id";
+    }
+
+    @ExceptionHandler
+    public ModelAndView notFoundExceptionHandler(NotFoundException ex) {
+        ModelAndView mav = new ModelAndView("not_found_product");
+        mav.setStatus(HttpStatus.NOT_FOUND);
+        return mav;
+    }
     @DeleteMapping("/remove")
     public String remove(@RequestParam("id") Long id) {
         logger.info("Product delete request");
@@ -89,17 +112,32 @@ public class ProductController {
         return "redirect:/product";
     }
 
-    @RequestMapping(path = "/showProductById")
-    public String showProductById(Model model, @RequestParam("id") Long id) {
+    @PostMapping("/addToCart")
+    public String addToCart(@RequestParam("id") Long id) {
+        logger.info("Add product in cart");
 
-        model.addAttribute("productRepr", productService.findById(id).orElseThrow(NotFoundException::new));
-        return "product-form-result-find-id";
+        ProductRepr productRepr = productService.findById(id).orElseThrow(NotFoundException::new);
+        cartServer.save(productRepr);
+
+        return "redirect:/product";
     }
 
-    @ExceptionHandler
-    public ModelAndView notFoundExceptionHandler(NotFoundException ex) {
-        ModelAndView mav = new ModelAndView("not_found_product");
-        mav.setStatus(HttpStatus.NOT_FOUND);
-        return mav;
+    @GetMapping("/showCart")
+    public String showCart(Model model){
+        logger.info("Looked at the products in the cart");
+
+        List<ProductRepr> listCart = cartServer.showProduct();
+        model.addAttribute("cart", listCart);
+
+        return "cart";
+    }
+
+    @DeleteMapping("/deleteProductInCart")
+    public String deleteProductFromCart(@RequestParam Long id) {
+        logger.info("Product delete request from shopping cart");
+
+         cartServer.delete(id);
+
+        return "redirect:/product/showCart";
     }
 }

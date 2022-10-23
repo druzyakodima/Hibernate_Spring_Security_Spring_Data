@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head th:replace="fragments/heads.html :: heads"></head>
+
+<body>
+
+<div class="container">
+    <div class="row py-2">
+
+        <form th:action="@{/product}" th:method="get">
+            <button type="submit" class="btn btn-primary">To the main page</button>
+        </form>
+
+        <div class="col-12 mt-2">
+            <table class="table table-bordered ">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+
+                    <th scope="col">Product ID</th>
+
+                    <th scope="col">Product name</th>
+
+                    <th scope="col">Cost($)</th>
+
+                    <th scope="col">Remove product</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${product}" th:each="product : ${cart}">
+                    <th th:text="${product.getId()}"></th>
+                    <th th:text="${product.getProduct_id()}"></th>
+                    <td th:text="${product.getTitle()}"></td>
+                    <td th:text="${product.getPrice()}"></td>
+                    <td>
+                        <form class="d-inline" th:method="delete" th:action="@{/product/deleteProductInCart (id=${product.id})}">
+                            <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<th:block th:replace="fragments/flooter.html :: scripts"/>
+
+</body>
+</html>

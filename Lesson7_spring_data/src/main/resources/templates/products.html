@@ -8,6 +8,12 @@
 <div class="container">
     <div class="row py-2">
 
+        <div class="col-12" style="float: right">
+            <form style="float:right" th:action="@{/product/showCart}" th:method="get">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-shopping-cart"></i></button>
+            </form>
+        </div>
+
         <div class="col-12 mx-0 mt-2">
             <form class="form-inline mx-0" th:action="@{/product/showProductById}" th:method="get"
                   th:object="${productRepr}">
@@ -61,7 +67,6 @@
             <table class="table table-bordered ">
                 <thead>
                 <tr>
-
                     <th scope="col">ID</th>
 
                     <th scope="col">Product ID</th>
@@ -70,7 +75,7 @@
 
                     <th scope="col">Cost($)</th>
 
-                    <th scope="col">Remove product</th>
+                    <th scope="col">Action product</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -80,8 +85,16 @@
                     <td th:text="${product.getTitle()}"></td>
                     <td th:text="${product.getPrice()}"></td>
                     <td>
+
+                        <form class="d-inline" th:method="post" th:action="@{/product/addToCart (id=${product.id})}" >
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-cart-plus"></i>
+                            </button>
+                        </form>
+
                         <form class="d-inline" th:method="delete" th:action="@{/product/remove (id=${product.id})}">
-                            <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="far fa-trash-alt"></i>
                             </button>
                         </form>
                     </td>
