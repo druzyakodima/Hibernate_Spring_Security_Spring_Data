@@ -1,4 +1,4 @@
-package com.example.lesson7_spring_data.entity;
+package com.example.lesson7_spring_data.entity.product_entity;
 
 
 import lombok.Getter;
@@ -22,7 +22,6 @@ public class Product {
 
     @Column(length = 128, unique = true, nullable = false)
     private String title;
-
 
     @Column(length = 128, nullable = false)
     private Integer price;

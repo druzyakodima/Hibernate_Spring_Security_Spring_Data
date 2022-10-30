@@ -1,9 +1,7 @@
 package com.example.lesson7_spring_data.rest;
 
-import com.example.lesson7_spring_data.entity.ProductRepr;
-import com.example.lesson7_spring_data.exception.NotFoundException;
-import com.example.lesson7_spring_data.service.CartServer;
-import com.example.lesson7_spring_data.service.ProductService;
+import com.example.lesson7_spring_data.service.cart_service.CartService;
+import com.example.lesson7_spring_data.service.cart_service.LineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,37 +11,38 @@ import java.util.List;
 //http://localhost:8080/swagger-ui/index.html#/
 
 @RestController
-@RequestMapping("/api/v2/cart")
+@RequestMapping("/api/v1/cart")
 public class CartResource {
 
-    private final CartServer cartServer;
-    private final ProductService productService;
+    private final CartService cartService;
 
     @Autowired
-    public CartResource(CartServer cartServer, ProductService productService) {
-        this.cartServer = cartServer;
-        this.productService = productService;
+    public CartResource(CartService cartService) {
+        this.cartService = cartService;
     }
 
-    @GetMapping(value = "/all", produces = "application/json")
-    public List<ProductRepr> showCart(){
-        List<ProductRepr> listCart = cartServer.showProduct();
-        return listCart;
+
+    @PostMapping("/user/{userId}/product/{productId}")
+    public void addToCart(@PathVariable("userId") Long userId,
+                                 @PathVariable("productId") Long productId,
+                                 @RequestParam("qty") Integer qty) {
+        cartService.addProductForUser(productId,userId,qty);
     }
 
-    @DeleteMapping("/delete{id}")
-    public void deleteProductFromCart(@PathVariable Long id) {
-
-        cartServer.delete(id);
-
+    @GetMapping("/user/{userId}")
+    public List<LineItem> findItemForUser(@PathVariable("userId") Long userId) {
+        return cartService.findAllItems(userId);
     }
 
-    @PostMapping("/addToCart")
-    public ProductRepr addToCart(@RequestParam("id") Long id) {
+    @PostMapping("/remove/user/{userId}/product/{productId}")
+    public void removeProduct(@PathVariable("userId") Long userId,
+                              @PathVariable("productId") Long productId,
+                              @RequestParam("qty") Integer qty) {
+        cartService.removeProductForUser(productId,userId,qty);
+    }
 
-        ProductRepr productRepr = productService.findById(id).orElseThrow(NotFoundException::new);
-        cartServer.save(productRepr);
-
-        return productRepr;
+    @DeleteMapping("/remove/user/{userId}")
+    public void removeAllProduct(@PathVariable("userId") Long userId) {
+        cartService.removeAllForUser(userId);
     }
 }

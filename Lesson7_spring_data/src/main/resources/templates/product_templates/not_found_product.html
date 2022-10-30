@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/heads :: heads"></head>
+<head th:replace="fragments/head :: head"></head>
+<nav th:replace="fragments/navbar :: navbar('Products')"></nav>
 <h1>NOT FOUND PRODUCT</h1>
 <body>
 <form th:action="@{/product}" th:method="get">

@@ -1,6 +1,6 @@
-package com.example.lesson7_spring_data.service;
+package com.example.lesson7_spring_data.service.product_service;
 
-import com.example.lesson7_spring_data.entity.ProductRepr;
+import com.example.lesson7_spring_data.entity.product_entity.ProductRepr;
 import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ public interface IProductService {
     Page<ProductRepr> findWithFilter(Integer priceMinFilter,
                                      Integer priceMaxFilter,
                                      Integer currentPage,
-                                     Integer countPage);
+                                     Integer countElementOnPage);
 
     void delete(Long id);
 

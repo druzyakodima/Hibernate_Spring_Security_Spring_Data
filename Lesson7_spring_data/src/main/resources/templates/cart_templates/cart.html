@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<head th:replace="fragments/heads.html :: heads"></head>
+<head th:replace="fragments/head.html :: head"></head>
 
 <body>
 
@@ -22,19 +22,22 @@
 
                     <th scope="col">Product name</th>
 
+                    <th scope="col">Count</th>
+
                     <th scope="col">Cost($)</th>
 
                     <th scope="col">Remove product</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${product}" th:each="product : ${cart}">
-                    <th th:text="${product.getId()}"></th>
-                    <th th:text="${product.getProduct_id()}"></th>
-                    <td th:text="${product.getTitle()}"></td>
-                    <td th:text="${product.getPrice()}"></td>
+                <tr th:if="${productInCart}" th:each="productInCart : ${cart}">
+                    <th th:text="${productInCart.getProduct().getId()}"></th>
+                    <th th:text="${productInCart.getProduct().getProduct_id()}"></th>
+                    <td th:text="${productInCart.getProduct().getTitle()}"></td>
+                    <td th:text="${productInCart.getQty().intValue()}"></td>
+                    <td th:text="${productInCart.getProduct().getPrice()}"></td>
                     <td>
-                        <form class="d-inline" th:method="delete" th:action="@{/product/deleteProductInCart (id=${product.id})}">
+                        <form class="d-inline" th:method="post" th:action="@{/cart/deleteProductInCart (productId=${productInCart.getProduct().getId()})}">
                             <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i>
                             </button>
                         </form>

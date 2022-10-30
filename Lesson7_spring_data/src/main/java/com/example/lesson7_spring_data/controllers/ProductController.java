@@ -1,22 +1,25 @@
 package com.example.lesson7_spring_data.controllers;
 
-import com.example.lesson7_spring_data.entity.Product;
+import com.example.lesson7_spring_data.entity.product_entity.Product;
+import com.example.lesson7_spring_data.entity.user_entity.UserRepr;
 import com.example.lesson7_spring_data.exception.NotFoundException;
-import com.example.lesson7_spring_data.service.CartServer;
-import com.example.lesson7_spring_data.service.IProductService;
-import com.example.lesson7_spring_data.entity.ProductRepr;
-import com.example.lesson7_spring_data.service.ProductService;
+import com.example.lesson7_spring_data.service.cart_service.CartService;
+import com.example.lesson7_spring_data.service.product_service.IProductService;
+import com.example.lesson7_spring_data.entity.product_entity.ProductRepr;
+import com.example.lesson7_spring_data.service.product_service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -27,14 +30,8 @@ public class ProductController {
 
     private IProductService productService;
 
-    private CartServer cartServer;
 
     public ProductController() {
-    }
-
-    @Autowired
-    public void setCartServer(CartServer cartServer) {
-        this.cartServer = cartServer;
     }
 
     @Autowired
@@ -48,7 +45,8 @@ public class ProductController {
                            @RequestParam("priceMinFilter") Optional<Integer> priceMinFilter,
                            @RequestParam("priceMaxFilter") Optional<Integer> priceMaxFilter,
                            @RequestParam("currentPage") Optional<Integer> currentPage,
-                           @RequestParam("countElementOnPage") Optional<Integer> countElementOnPage) {
+                           @RequestParam("countElementOnPage") Optional<Integer> countElementOnPage,
+                           @ModelAttribute("user")UserRepr user) {
 
         logger.info("List page requested");
 
@@ -60,47 +58,61 @@ public class ProductController {
 
         model.addAttribute("productsRepr", productsRepr);
 
-        return "products";
+        return "product_templates/products";
     }
 
-
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @GetMapping("/showFormAddProduct")
     public String create(Model model) {
         logger.info("Create new user request");
 
         model.addAttribute("product", new Product());
-        return "product-add-form";
+        return "product_templates/product-add-form";
     }
 
-    @RequestMapping("/add")
-    public String showSimpleForm(@ModelAttribute("product") ProductRepr productRepr) {
-        logger.info("Add new product");
-        if (productRepr != null) {
-            productService.save(productRepr);
-            return "redirect:/product";
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
+    @GetMapping("/edit{id}")
+    public String edit(@PathVariable("id") Long id, Model model){
+
+        ProductRepr productRepr = productService.findById(id).orElseThrow(NotFoundException::new);
+        model.addAttribute("product",productRepr);
+
+        return "product_templates/product-add-form";
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
+    @PostMapping("/update")
+    public String update(@Valid @ModelAttribute("product") ProductRepr product, BindingResult result) {
+        logger.info("Update endpoint request");
+
+        if (result.hasErrors()) {
+            return "product_templates/product-add-form";
         }
-        return "not_found_product";
-    }
+        if (product.getProduct_id() != product.getProduct_id()) {
+            result.rejectValue("password", "", "Password not matching");
+            return "product_templates/product-add-form";
+        }
 
-    @RequestMapping("/processForm")
-    public String processForm(@ModelAttribute("product") ProductRepr productRepr) {
+        logger.info("Updating user with id {}", product.getId());
+        productService.save(product);
         return "redirect:/product";
     }
 
-    @RequestMapping(path = "/showProductById")
+    @GetMapping("/processForm")
+    public String processForm(@ModelAttribute ProductRepr productRepr) {
+        return "redirect:/product";
+    }
+
+    @GetMapping(path = "/showProductById")
     public String showProductById(Model model, @RequestParam("id") Long id) {
 
-        productService.findById(id).orElseThrow(NotFoundException::new);
+        ProductRepr productRepr = productService.findById(id).orElseThrow(NotFoundException::new);
+        model.addAttribute("productRepr", productRepr);
 
-        return "product-form-result-find-id";
+        return "product_templates/product-form-result-find-id";
     }
 
-    @ExceptionHandler
-    public ModelAndView notFoundExceptionHandler(NotFoundException ex) {
-        ModelAndView mav = new ModelAndView("not_found_product");
-        mav.setStatus(HttpStatus.NOT_FOUND);
-        return mav;
-    }
+    @Secured({"ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
     @DeleteMapping("/remove")
     public String remove(@RequestParam("id") Long id) {
         logger.info("Product delete request");
@@ -112,32 +124,10 @@ public class ProductController {
         return "redirect:/product";
     }
 
-    @PostMapping("/addToCart")
-    public String addToCart(@RequestParam("id") Long id) {
-        logger.info("Add product in cart");
-
-        ProductRepr productRepr = productService.findById(id).orElseThrow(NotFoundException::new);
-        cartServer.save(productRepr);
-
-        return "redirect:/product";
-    }
-
-    @GetMapping("/showCart")
-    public String showCart(Model model){
-        logger.info("Looked at the products in the cart");
-
-        List<ProductRepr> listCart = cartServer.showProduct();
-        model.addAttribute("cart", listCart);
-
-        return "cart";
-    }
-
-    @DeleteMapping("/deleteProductInCart")
-    public String deleteProductFromCart(@RequestParam Long id) {
-        logger.info("Product delete request from shopping cart");
-
-         cartServer.delete(id);
-
-        return "redirect:/product/showCart";
+    @ExceptionHandler
+    public ModelAndView notFoundExceptionHandler(NotFoundException ex) {
+        ModelAndView mav = new ModelAndView("product_templates/not_found_product");
+        mav.setStatus(HttpStatus.NOT_FOUND);
+        return mav;
     }
 }

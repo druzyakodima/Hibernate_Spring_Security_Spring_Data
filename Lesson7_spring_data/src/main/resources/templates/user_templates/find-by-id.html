@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+
+<head th:replace="fragments/head :: head"></head>
+
+<body>
+<nav th:replace="fragments/navbar :: navbar('Users')"></nav>
+<div class="row py-2">
+    <div class="col-12">
+        <div class="col-12">
+            <form th:action="@{/user}" th:method="get" th:object="${userRepr}">
+                <table class="table table-bordered my-2">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:object="${userRepr}">
+                        <th th:text="${userRepr.getId()}"></th>
+                        <th th:text="${userRepr.getUsername()}"></th>
+                        <td th:text="${userRepr.getAge()}"></td>
+                        <td th:text="${userRepr.getEmail()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-primary">To the main page</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/flooter.html :: scripts"/>
+
+</body>
