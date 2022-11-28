@@ -1,9 +1,11 @@
-package org.homework.entity;
+package com.example.lesson7_spring_data.entity.product_entity;
 
-import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
+
+import javax.persistence.*;
+
 
 @Getter
 @Setter
@@ -14,32 +16,31 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(length = 128, unique = true, nullable = false)
-    private Long product_id;
+    private Integer product_id;
+
     @Column(length = 128, unique = true, nullable = false)
     private String title;
 
     @Column(length = 128, nullable = false)
-    private int price;
+    private Integer price;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Buyer> buyer;
+    public Product(ProductRepr productRepr) {
+        this.id = productRepr.getId();
+        this.product_id = productRepr.getProduct_id();
+        this.title = productRepr.getTitle();
+        this.price = productRepr.getPrice();
+    }
 
-    public Product(Long id, Long product_id, String title, int price) {
+    public Product(Long id, int product_id, String title, int price) {
         this.id = id;
         this.product_id = product_id;
         this.title = title;
         this.price = price;
     }
 
-    public Product(Long product_id, String title, int price, List<Buyer> buyer) {
-        this.product_id = product_id;
-        this.title = title;
-        this.price = price;
-        this.buyer = buyer;
-    }
-
-    public Product(Long product_id, String title, int price) {
+    public Product(int product_id, String title, int price) {
         this.product_id = product_id;
         this.title = title;
         this.price = price;

@@ -1,0 +1,20 @@
+GET http://localhost:8080/api/v1/product/all
+
+###
+
+GET http://localhost:8080/api/v1/product/findById/43
+
+###
+
+POST http://localhost:8080/api/v1/product/create
+Content-Type: application/json
+
+{
+  "product_id": 888,
+  "title": "cup",
+  "price": 103
+}
+
+###
+
+DELETE http://localhost:8080/api/v1/product/delete/41
