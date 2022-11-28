@@ -37,15 +37,23 @@
                     <td th:text="${productInCart.getQty().intValue()}"></td>
                     <td th:text="${productInCart.getProduct().getPrice()}"></td>
                     <td>
-                        <form class="d-inline" th:method="post" th:action="@{/cart/deleteProductInCart (productId=${productInCart.getProduct().getId()})}">
+                        <form class="d-inline" th:method="post"
+                              th:action="@{/cart/deleteProductInCart (productId=${productInCart.getProduct().getId()})}">
                             <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i>
                             </button>
                         </form>
                     </td>
-                </tr>
-
                 </tbody>
             </table>
+            <div>
+                <hr>
+                <tr>
+                    <th scope="col"><b>Итого</b></th>
+                    <th></th>
+                    <th></th>
+                    <th th:text="${totalPrice}"></th>
+                </tr>
+            </div>
         </div>
 
     </div>
