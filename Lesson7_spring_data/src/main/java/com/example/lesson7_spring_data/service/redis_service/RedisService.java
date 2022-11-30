@@ -70,13 +70,10 @@ public class RedisService implements IRedisService {
         for (LineItem lineItem : allItems) {
 
             if (lineItem.getProduct().equals(product)) {
-
                 var qty = lineItem.getQty();
 
                 if (qty == 1) {
-
                     redisRepository.delete(lineItem);
-
                 } else {
 
                     lineItem.setQty(--qty);
@@ -86,10 +83,18 @@ public class RedisService implements IRedisService {
 
                     redisRepository.save(lineItem);
                 }
+
                 break;
             }
 
         }
+    }
+
+    @Override
+    public void clearCart(long userId) {
+        List<LineItem> allItems = findAllItems(userId);
+        redisRepository.deleteAll(allItems);
+        totalPrice(userId);
     }
 
     @Override

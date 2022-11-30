@@ -71,7 +71,7 @@ public class CartController {
         return "redirect:/product";
     }
 
-    @PostMapping("/deleteProductInCart")
+    @PostMapping("/delete")
     public String deleteProductFromCart(@RequestParam("productId") Long productId) {
 
         log.info("Product delete request from shopping cart");
@@ -84,5 +84,12 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    @DeleteMapping("/clearCart")
+    public String clearCartForUser() {
 
+        User user = userAuthService.getCurrentUser();
+        redisService.clearCart(user.getId());
+
+        return "redirect:/cart";
+    }
 }

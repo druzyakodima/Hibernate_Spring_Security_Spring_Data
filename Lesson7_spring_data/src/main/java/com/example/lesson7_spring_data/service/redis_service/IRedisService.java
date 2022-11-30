@@ -15,4 +15,6 @@ public interface IRedisService {
     int totalPrice(long userId);
 
     List<LineItem> findAllItems(long userId);
+
+    void clearCart(long userId);
 }
