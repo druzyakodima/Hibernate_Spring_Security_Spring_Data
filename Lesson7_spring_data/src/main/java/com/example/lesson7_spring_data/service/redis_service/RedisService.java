@@ -30,39 +30,36 @@ public class RedisService implements IRedisService {
     @Override
     public void addProductForUser(ProductRepr productRepr, UserRepr userRepr) {
 
-        LineItem lineItem = new LineItem(productRepr.getId(), userRepr.getId());
-
         List<LineItem> lineItems = findAllItems(userRepr.getId());
 
         var qty = lineItems
                 .stream()
-                .filter(lineItem1 -> lineItem1.equals(new LineItem(productRepr.getId(), userRepr.getId())))
+                .filter(item -> item.equals(new LineItem(productRepr.getId(), userRepr.getId())))
                 .mapToInt(LineItem::getQty)
                 .sum();
 
 
         if (qty >= 1) {
+
             for (LineItem item : lineItems) {
 
                 if (item.getProduct().equals(productRepr)) {
 
-                    lineItem = item;
-                    lineItem.setQty(Math.toIntExact(++qty));
+                    item.setQty(Math.toIntExact(++qty));
 
-                    int newPrice = lineItem.getProduct().getPrice() + productRepr.getPrice();
-                    lineItem.getProduct().setPrice(newPrice);
+                    var newPrice = item.getProduct().getPrice() + productRepr.getPrice();
+                    item.getProduct().setPrice(newPrice);
 
+                    redisRepository.save(item);
                     break;
                 }
             }
 
         } else {
-            lineItem.setQty(1);
-            lineItem.setUser(userRepr);
-            lineItem.setProduct(productRepr);
+            LineItem lineItem = new LineItem(productRepr, userRepr, 1);
+            redisRepository.save(lineItem);
         }
 
-        redisRepository.save(lineItem);
     }
 
     @Override
@@ -71,14 +68,17 @@ public class RedisService implements IRedisService {
         List<LineItem> allItems = findAllItems(user.getId());
 
         for (LineItem lineItem : allItems) {
+
             if (lineItem.getProduct().equals(product)) {
 
                 var qty = lineItem.getQty();
 
                 if (qty == 1) {
+
                     redisRepository.delete(lineItem);
 
                 } else {
+
                     lineItem.setQty(--qty);
 
                     var newPrice = lineItem.getProduct().getPrice() - product.getPrice();
@@ -88,6 +88,7 @@ public class RedisService implements IRedisService {
                 }
                 break;
             }
+
         }
     }
 
