@@ -5,7 +5,7 @@ import com.example.lesson7_spring_data.entity.user_entity.UserRepr;
 import com.example.lesson7_spring_data.exception.NotFoundException;
 import com.example.lesson7_spring_data.entity.LineItem;
 import com.example.lesson7_spring_data.service.product_service.IProductService;
-import com.example.lesson7_spring_data.service.redis_service.IRedisService;
+import com.example.lesson7_spring_data.service.lineItem_service.ILineItemService;
 import com.example.lesson7_spring_data.service.user_service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,13 +21,13 @@ import java.util.List;
 @RequestMapping("/api/v1/cart")
 public class CartResource {
 
-    private IRedisService redisService;
+    private ILineItemService lineItemService;
     private IProductService productService;
     private IUserService userService;
 
     @Autowired
-    public CartResource(IRedisService redisService, IProductService productService, IUserService userService) {
-        this.redisService = redisService;
+    public CartResource(ILineItemService lineItemService, IProductService productService, IUserService userService) {
+        this.lineItemService = lineItemService;
         this.productService = productService;
         this.userService = userService;
     }
@@ -38,12 +38,12 @@ public class CartResource {
         ProductRepr productRepr = productService.findById(productId).orElseThrow(() -> new NotFoundException("Продукт не найден" + productId));
         UserRepr userRepr = userService.findById(userId).orElseThrow(() -> new NotFoundException("Потребитель не найден" + productId));
 
-        redisService.addProductForUser(productRepr,userRepr);
+        lineItemService.addProductForUser(productRepr, userRepr);
     }
 
     @GetMapping("/user/{userId}")
     public List<LineItem> findItemForUser(@PathVariable("userId") Long userId) {
-        return redisService.findAllItems(userId);
+        return lineItemService.findAllItems(userId);
     }
 
     @PostMapping("/remove/user/{userId}/product/{productId}")
@@ -54,10 +54,10 @@ public class CartResource {
         ProductRepr productRepr = productService.findById(productId).orElseThrow(() -> new NotFoundException("Продукт не найден" + productId));
         UserRepr userRepr = userService.findById(userId).orElseThrow(() -> new NotFoundException("Потребитель не найден" + productId));
 
-        redisService.removeProductForUser(productRepr,userRepr);
+        lineItemService.removeProductForUser(productRepr, userRepr);
     }
-
     @ExceptionHandler
+
     public ResponseEntity<String> notFoundException(NotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }

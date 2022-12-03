@@ -1,9 +1,9 @@
-package com.example.lesson7_spring_data.service.redis_service;
+package com.example.lesson7_spring_data.service.lineItem_service;
 
 import com.example.lesson7_spring_data.entity.LineItem;
 import com.example.lesson7_spring_data.entity.product_entity.ProductRepr;
 import com.example.lesson7_spring_data.entity.user_entity.UserRepr;
-import com.example.lesson7_spring_data.repository.redis_repository.IRedisRepository;
+import com.example.lesson7_spring_data.repository.lineItem_repository.ILineItemRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +15,16 @@ import java.util.List;
 @Setter
 @Getter
 @Service
-public class RedisService implements IRedisService {
+public class LineItemService implements ILineItemService {
 
-    private IRedisRepository redisRepository;
+    private ILineItemRepository lineItemRepository;
 
     @Autowired
-    public RedisService(IRedisRepository redisRepository) {
-        this.redisRepository = redisRepository;
+    public LineItemService(ILineItemRepository lineItemRepository) {
+        this.lineItemRepository = lineItemRepository;
     }
 
-    public RedisService() {
+    public LineItemService() {
     }
 
     @Override
@@ -47,17 +47,17 @@ public class RedisService implements IRedisService {
 
                     item.setQty(Math.toIntExact(++qty));
 
-                    var newPrice = item.getProduct().getPrice() + productRepr.getPrice();
-                    item.getProduct().setPrice(newPrice);
+                    var newPrice = item.getProduct().getTotalPrice() + productRepr.getPrice();
+                    item.getProduct().setTotalPrice(newPrice);
 
-                    redisRepository.save(item);
+                    lineItemRepository.save(item);
                     break;
                 }
             }
 
         } else {
             LineItem lineItem = new LineItem(productRepr, userRepr, 1);
-            redisRepository.save(lineItem);
+            lineItemRepository.save(lineItem);
         }
 
     }
@@ -73,15 +73,15 @@ public class RedisService implements IRedisService {
                 var qty = lineItem.getQty();
 
                 if (qty == 1) {
-                    redisRepository.delete(lineItem);
+                    lineItemRepository.delete(lineItem);
                 } else {
 
                     lineItem.setQty(--qty);
 
-                    var newPrice = lineItem.getProduct().getPrice() - product.getPrice();
-                    lineItem.getProduct().setPrice(newPrice);
+                    var newPrice = lineItem.getProduct().getTotalPrice() - product.getPrice();
+                    lineItem.getProduct().setTotalPrice(newPrice);
 
-                    redisRepository.save(lineItem);
+                    lineItemRepository.save(lineItem);
                 }
 
                 break;
@@ -93,18 +93,18 @@ public class RedisService implements IRedisService {
     @Override
     public void clearCart(long userId) {
         List<LineItem> allItems = findAllItems(userId);
-        redisRepository.deleteAll(allItems);
-        totalPrice(userId);
+        lineItemRepository.deleteAll(allItems);
+        sumInCart(userId);
     }
 
     @Override
-    public int totalPrice(long userId) {
+    public int sumInCart(long userId) {
 
         List<LineItem> allItems = findAllItems(userId);
         var totalPrice = 0;
 
         for (LineItem allItem : allItems) {
-            totalPrice += allItem.getProduct().getPrice();
+            totalPrice += allItem.getProduct().getTotalPrice();
         }
 
         return totalPrice;
@@ -114,7 +114,7 @@ public class RedisService implements IRedisService {
     public List<LineItem> findAllItems(long userId) {
         ArrayList<LineItem> lineItems = new ArrayList<>();
 
-        redisRepository.findAll().forEach(e -> {
+        lineItemRepository.findAll().forEach(e -> {
             if (e.getUser().getId().equals(userId)) {
                 lineItems.add(e);
             }

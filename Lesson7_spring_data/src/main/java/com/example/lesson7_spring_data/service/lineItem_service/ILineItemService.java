@@ -1,4 +1,4 @@
-package com.example.lesson7_spring_data.service.redis_service;
+package com.example.lesson7_spring_data.service.lineItem_service;
 
 import com.example.lesson7_spring_data.entity.LineItem;
 import com.example.lesson7_spring_data.entity.product_entity.ProductRepr;
@@ -6,13 +6,13 @@ import com.example.lesson7_spring_data.entity.user_entity.UserRepr;
 
 import java.util.List;
 
-public interface IRedisService {
+public interface ILineItemService {
 
     void addProductForUser(ProductRepr productRepr, UserRepr userRepr);
 
     void removeProductForUser(ProductRepr productId, UserRepr useId);
 
-    int totalPrice(long userId);
+    int sumInCart(long userId);
 
     List<LineItem> findAllItems(long userId);
 

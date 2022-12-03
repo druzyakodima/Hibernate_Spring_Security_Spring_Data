@@ -7,7 +7,7 @@ import com.example.lesson7_spring_data.exception.NotFoundException;
 import com.example.lesson7_spring_data.security.UserAuthService;
 import com.example.lesson7_spring_data.entity.LineItem;
 import com.example.lesson7_spring_data.service.product_service.IProductService;
-import com.example.lesson7_spring_data.service.redis_service.IRedisService;
+import com.example.lesson7_spring_data.service.lineItem_service.ILineItemService;
 import com.example.lesson7_spring_data.service.user_service.IUserService;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,61 +26,61 @@ public class CartController {
 
     private IProductService productService;
     private UserAuthService userAuthService;
-    private IRedisService redisService;
+    private ILineItemService lineItemService;
     private IUserService userService;
 
     @Autowired
     public CartController(IProductService productService,
                           UserAuthService userAuthService,
-                          IRedisService redisService,
+                          ILineItemService lineItemService,
                           IUserService userService) {
 
         this.productService = productService;
         this.userAuthService = userAuthService;
-        this.redisService = redisService;
+        this.lineItemService = lineItemService;
         this.userService = userService;
     }
 
     @GetMapping()
     public String showCart(Model model) {
 
-        log.info("Looked at the products in the cart");
         User user = userAuthService.getCurrentUser();
 
-        List<LineItem> listCart = redisService.findAllItems(user.getId());
-        Integer totalPrice = redisService.totalPrice(user.getId());
+        List<LineItem> listCart = lineItemService.findAllItems(user.getId());
+        Integer sumInCart = lineItemService.sumInCart(user.getId());
 
         model.addAttribute("cart", listCart);
-        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("sumInCart", sumInCart);
 
+        log.info( "User id: " + user.getId() + " looked at the products in the cart");
         return "cart_templates/cart";
     }
 
     @PostMapping("/addToCart")
     public String addToCart(@RequestParam("productId") Long productId) {
 
-        log.info("Add product in cart");
 
         User user = userAuthService.getCurrentUser();
 
         ProductRepr productRepr = productService.findById(productId).orElseThrow(() -> new NotFoundException("Продукт не найден" + productId));
         UserRepr userRepr = userService.findById(user.getId()).orElseThrow(() -> new NotFoundException("Потребитель не найден" + productId));
 
-        redisService.addProductForUser(productRepr, userRepr);
+        lineItemService.addProductForUser(productRepr, userRepr);
 
+        log.info("User id: " + user.getId() + " add product in cart");
         return "redirect:/product";
     }
 
     @PostMapping("/delete")
     public String deleteProductFromCart(@RequestParam("productId") Long productId) {
 
-        log.info("Product delete request from shopping cart");
 
         ProductRepr productRepr = productService.findById(productId).orElseThrow(() -> new NotFoundException("Продукт не найден" + productId));
         UserRepr userRepr = new UserRepr(userAuthService.getCurrentUser());
 
-        redisService.removeProductForUser(productRepr, userRepr);
+        lineItemService.removeProductForUser(productRepr, userRepr);
 
+        log.info("User id: " +  userRepr.getId() + " product delete request from shopping cart");
         return "redirect:/cart";
     }
 
@@ -88,8 +88,8 @@ public class CartController {
     public String clearCartForUser() {
 
         User user = userAuthService.getCurrentUser();
-        redisService.clearCart(user.getId());
-
+        lineItemService.clearCart(user.getId());
+        log.info("User id: " +  user.getId() + " clear shopping cart");
         return "redirect:/cart";
     }
 }

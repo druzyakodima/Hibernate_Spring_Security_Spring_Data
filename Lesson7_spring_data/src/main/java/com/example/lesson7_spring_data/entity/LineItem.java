@@ -4,11 +4,14 @@ import com.example.lesson7_spring_data.entity.product_entity.ProductRepr;
 import com.example.lesson7_spring_data.entity.user_entity.UserRepr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
@@ -22,14 +25,13 @@ public class LineItem implements Serializable {
     private ProductRepr product;
     private UserRepr user;
     private Integer qty;
-    private Integer totalPrice;
 
-    public LineItem(ProductRepr product, UserRepr user, Integer qty, Integer totalPrice) {
-        this.product = product;
-        this.user = user;
-        this.qty = qty;
-        this.totalPrice = totalPrice;
-    }
+    @CreationTimestamp
+    private LocalDateTime createAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
+
 
     public LineItem(ProductRepr product, UserRepr user, Integer qty) {
         this.product = product;
